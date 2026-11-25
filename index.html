@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sagnik Dey — Personal Trainer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
   <script>
@@ -14,51 +14,64 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-            display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
-            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
           },
           colors: {
-            surface: '#FAFAFA',
-            card: '#FFFFFF',
-            ink: '#0A0A0A',
-            muted: '#737373',
-            line: '#E5E5E5',
-            brand: {
-              50: '#F5F5F5',
-              100: '#E5E5E5',
-              500: '#171717',
-              600: '#0A0A0A',
-              700: '#000000',
+            canvas: '#F6F7F9',
+            surface: '#FFFFFF',
+            subtle: '#F1F3F6',
+            ink: '#0F172A',
+            secondary: '#475569',
+            muted: '#64748B',
+            faint: '#94A3B8',
+            border: '#E5E7EB',
+            cobalt: {
+              50: '#EFF6FF',
+              100: '#DBEAFE',
+              500: '#3B82F6',
+              600: '#2563EB',
+              700: '#1D4ED8',
             }
-          },
-          boxShadow: {
-            soft: '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
-            card: '0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -2px rgba(15, 23, 42, 0.03)',
-            sheet: '0 -8px 30px rgba(15, 23, 42, 0.14)',
           }
         }
       }
     };
   </script>
   <style>
+    :root {
+      --canvas: #F6F7F9;
+      --surface: #FFFFFF;
+      --hairline: rgba(15, 23, 42, 0.075);
+      --hairline-strong: rgba(15, 23, 42, 0.14);
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-card: 0 0 0 1px rgba(15, 23, 42, 0.055), 0 2px 4px rgba(15, 23, 42, 0.03), 0 12px 28px -8px rgba(15, 23, 42, 0.06);
+      --shadow-elevated: 0 0 0 1px rgba(15, 23, 42, 0.07), 0 16px 40px -12px rgba(15, 23, 42, 0.14), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+    }
+
     * {
       -webkit-tap-highlight-color: transparent;
       box-sizing: border-box;
     }
+
+    html {
+      scroll-behavior: smooth;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+
     html, body {
-      background-color: #F7F7F8;
+      background-color: var(--canvas);
       background-image:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 0, 0, 0.055), transparent 70%),
-        radial-gradient(rgba(0, 0, 0, 0.085) 1px, transparent 1px),
-        linear-gradient(to right, rgba(0, 0, 0, 0.032) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.032) 1px, transparent 1px);
-      background-size: 100% 100%, 24px 24px, 96px 96px, 96px 96px;
+        radial-gradient(ellipse 90% 40% at 50% -12%, rgba(37, 99, 235, 0.055), transparent 70%),
+        radial-gradient(ellipse 50% 30% at 90% 0%, rgba(14, 165, 233, 0.04), transparent 60%);
       background-attachment: fixed;
-      color: #0A0A0A;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #0F172A;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-variant-numeric: tabular-nums;
       overflow-x: hidden;
     }
+
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -66,52 +79,182 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+
+    /* Realistic Apple/Linear-grade surface materiality */
+    .pro-card {
+      background: #FFFFFF;
+      box-shadow: var(--shadow-card);
+      border-radius: 18px;
     }
-    .animate-sheet {
-      animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+
+    .pro-card-interactive {
+      background: #FFFFFF;
+      box-shadow: var(--shadow-card);
+      border-radius: 16px;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pro-card-interactive:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.10), 0 6px 16px -4px rgba(15, 23, 42, 0.07), 0 20px 36px -12px rgba(15, 23, 42, 0.08);
+    }
+
+    .glass-nav {
+      background: rgba(246, 247, 249, 0.78);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.075);
+    }
+
+    .exercise-row {
+      transition: background-color 0.14s ease;
+    }
+
+    .exercise-row:hover {
+      background-color: #F8FAFC;
+    }
+
+    @keyframes enterStage {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-stage {
+      animation: enterStage 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+    .live-dot {
+      animation: pulseLive 2.6s ease-in-out infinite;
+    }
+
+    @keyframes rowFlash {
+      0% { background-color: rgba(37, 99, 235, 0.10); }
+      100% { background-color: transparent; }
+    }
+    .flash-row {
+      animation: rowFlash 1.8s ease-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-brand-100 selection:text-brand-700">
+<body class="min-h-screen flex flex-col antialiased selection:bg-cobalt-100 selection:text-cobalt-700">
 
-  <!-- Sticky Top Navigation -->
-  <header class="sticky top-0 z-30 bg-white/85 backdrop-blur-xl border-b border-neutral-200 shadow-[0_1px_12px_rgba(0,0,0,0.04)]">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6">
-      <div class="h-16 flex items-center justify-between gap-3">
-        <div class="flex items-center min-w-0">
+  <!-- Precision Sticky Top Bar -->
+  <header class="sticky top-0 z-30 glass-nav">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="h-16 flex items-center justify-between gap-4">
+        <!-- Brand Lockup -->
+        <button type="button" data-view-tab="all" class="flex items-center min-w-0 text-left group focus:outline-none">
           <div class="min-w-0">
-            <h1 class="font-display font-bold text-lg sm:text-xl tracking-tight text-ink truncate">Sagnik Dey</h1>
-            <p class="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-500 leading-none mt-0.5">Personal Trainer</p>
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-[17px] sm:text-[18px] tracking-[-0.02em] text-ink truncate">Sagnik Dey</span>
+              <span class="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white border border-slate-200/90 text-[11px] font-medium text-secondary shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 live-dot"></span>
+                Coaching
+              </span>
+            </div>
+            <p class="text-[11px] font-medium text-muted tracking-[0.02em] leading-none mt-0.5">
+              Personal Training Systems
+            </p>
           </div>
+        </button>
+
+        <!-- Right Controls -->
+        <div class="flex items-center gap-2.5">
+          <button
+            type="button"
+            id="openCmdBtn"
+            class="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/90 hover:border-slate-300 text-[13px] font-medium text-secondary hover:text-ink shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all min-h-[38px]"
+            aria-label="Search splits, days, or exercises"
+          >
+            <i data-lucide="search" class="w-3.5 h-3.5 text-faint"></i>
+            <span class="hidden sm:inline">Jump to split or exercise…</span>
+            <span class="sm:hidden">Search</span>
+            <kbd class="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-md bg-subtle border border-slate-200/80 font-mono text-[10px] font-medium text-muted">⌘K</kbd>
+          </button>
         </div>
-
-
       </div>
 
-      <!-- Category Filter Tabs (Mobile Scrollable) -->
-      <nav id="categoryNav" class="flex items-center gap-2 pb-3 overflow-x-auto no-scrollbar" aria-label="Program Categories">
+      <!-- Mobile/Tablet Horizontal Split Strip (Hidden on Desktop where Left Rail is shown) -->
+      <nav id="mobileSplitNav" class="lg:hidden flex items-center gap-1.5 pb-3 overflow-x-auto no-scrollbar snap-x snap-mandatory" aria-label="Program Splits">
         <!-- Populated by JS -->
       </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-5 sm:py-8 space-y-6">
+  <!-- Main Studio Layout -->
+  <div class="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8 pb-28 lg:pb-12">
+    <div class="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-8 items-start">
 
+      <!-- Desktop Sticky Left Split Rail -->
+      <aside class="hidden lg:block sticky top-24 space-y-5" aria-label="Split Directory">
+        <div id="desktopRail" class="space-y-4">
+          <!-- Populated by JS -->
+        </div>
+      </aside>
 
-    <!-- Categories & Splits Container -->
-    <div id="categoriesContainer" class="space-y-8">
-      <!-- Populated by JS -->
+      <!-- Main Stage -->
+      <main id="mainStage" class="min-w-0">
+        <!-- Populated by JS -->
+      </main>
+
     </div>
-  </main>
+  </div>
 
+  <!-- Mobile Bottom Quick-Switcher Dock -->
+  <div class="lg:hidden fixed bottom-[max(1rem,env(safe-area-inset-bottom))] inset-x-4 z-30 flex justify-center pointer-events-none">
+    <div class="pointer-events-auto inline-flex items-center gap-1 p-1.5 rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-[0_12px_32px_-6px_rgba(15,23,42,0.18),0_2px_8px_rgba(15,23,42,0.06)]">
+      <button type="button" id="mobilePrevBtn" class="p-2.5 rounded-xl hover:bg-subtle text-secondary active:scale-95 transition-all" aria-label="Previous Split">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+      </button>
+      <button type="button" id="mobileJumpBtn" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-ink text-white text-xs font-semibold active:scale-95 transition-transform">
+        <i data-lucide="layers" class="w-3.5 h-3.5 text-blue-400"></i>
+        <span id="mobileActiveLabel">All Splits</span>
+      </button>
+      <button type="button" id="mobileNextBtn" class="p-2.5 rounded-xl hover:bg-subtle text-secondary active:scale-95 transition-all" aria-label="Next Split">
+        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
 
+  <!-- Command Palette Modal -->
+  <div id="cmdModal" class="fixed inset-0 z-50 hidden items-start justify-center pt-[10vh] sm:pt-[14vh] px-4 bg-slate-900/30 backdrop-blur-[6px]" role="dialog" aria-modal="true" aria-labelledby="cmdInput">
+    <div class="w-full max-w-xl bg-white rounded-2xl shadow-[0_0_0_1px_rgba(15,23,42,0.08),0_24px_60px_-12px_rgba(15,23,42,0.24)] overflow-hidden animate-stage">
+      <div class="flex items-center gap-3 px-4 py-3.5 border-b border-slate-100">
+        <i data-lucide="search" class="w-4 h-4 text-cobalt-600 shrink-0"></i>
+        <input
+          id="cmdInput"
+          type="text"
+          placeholder="Type a split, day focus, or exercise…"
+          autocomplete="off"
+          class="w-full bg-transparent text-[14px] font-medium text-ink placeholder:text-faint focus:outline-none"
+        />
+        <button type="button" id="closeCmdBtn" class="px-2 py-1 rounded-lg bg-subtle hover:bg-slate-200/80 font-mono text-[10px] font-semibold text-muted transition-colors">
+          ESC
+        </button>
+      </div>
+      <div id="cmdResults" class="max-h-[56vh] overflow-y-auto p-2 space-y-0.5">
+        <!-- Populated by JS -->
+      </div>
+      <div class="px-4 py-2.5 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-muted">
+        <span>↑↓ to navigate · ↵ to open</span>
+        <span class="font-mono">⌘K</span>
+      </div>
+    </div>
+  </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-full bg-ink text-white text-xs font-semibold shadow-card items-center gap-2">
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-20 lg:bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-full bg-ink text-white text-xs font-medium shadow-[0_10px_30px_rgba(15,23,42,0.22)] items-center gap-2">
     <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
     <span id="toastText">Saved</span>
   </div>
@@ -122,8 +265,9 @@
         id: 'beginner',
         name: 'Full Body Workout Program',
         badge: '1 Split',
+        tag: 'Foundation',
         description: 'Foundational gym split with no cardio or explosive movements.',
-        accent: 'indigo',
+        accent: 'slate',
         splits: [
           {
             id: 'beg-full-body',
@@ -141,8 +285,9 @@
         id: 'ppl',
         name: 'Push Pull Legs',
         badge: '1 Split',
+        tag: 'PPL System',
         description: '3-day push pull legs split.',
-        accent: 'slate',
+        accent: 'cobalt',
         splits: [
           {
             id: 'beg-ppl',
@@ -160,8 +305,9 @@
         id: 'men',
         name: 'Men',
         badge: '1 Split',
+        tag: 'Hypertrophy',
         description: '4-day bodybuilding & strength split.',
-        accent: 'blue',
+        accent: 'cobalt',
         splits: [
           {
             id: 'men-4day',
@@ -180,8 +326,9 @@
         id: 'women',
         name: 'Women',
         badge: '1 Split',
+        tag: 'Upper / Lower',
         description: '4-day upper & lower push-pull split.',
-        accent: 'violet',
+        accent: 'slate',
         splits: [
           {
             id: 'women-4day',
@@ -200,6 +347,7 @@
         id: 'knee-injury',
         name: 'Knee Injury Split',
         badge: '1 Split',
+        tag: 'Joint-Safe',
         description: 'Unified 4-day knee-friendly gym split.',
         accent: 'emerald',
         splits: [
@@ -220,8 +368,9 @@
         id: 'fat-loss',
         name: 'Fat Loss Program',
         badge: '1 Split',
+        tag: 'Metabolic',
         description: 'High-output metabolic conditioning with reduced joint-friendly weight training.',
-        accent: 'slate',
+        accent: 'amber',
         splits: [
           {
             id: 'fat-loss-3day',
@@ -239,8 +388,9 @@
         id: 'me',
         name: 'Me',
         badge: '1 Split',
+        tag: 'Personal',
         description: 'My personal 6-day split.',
-        accent: 'slate',
+        accent: 'cobalt',
         splits: [
           {
             id: 'me-6day',
@@ -497,12 +647,33 @@
       ]
     };
 
+    const SHORT_LABELS = {
+      'beg-full-body': 'Full Body',
+      'beg-ppl': 'Push Pull Legs',
+      'men-4day': 'Men',
+      'women-4day': 'Women',
+      'knee-4day': 'Knee Safe',
+      'fat-loss-3day': 'Fat Loss',
+      'me-6day': 'Me'
+    };
+
+    const TAG_STYLES = {
+      cobalt:  'bg-blue-50/90 text-blue-700 border-blue-200/80',
+      emerald: 'bg-emerald-50/90 text-emerald-700 border-emerald-200/80',
+      amber:   'bg-amber-50/90 text-amber-700 border-amber-200/80',
+      slate:   'bg-slate-100 text-slate-700 border-slate-200/80',
+    };
+
     let state = {
-      activeView: 'all',  // 'all' or split.id for instant 1-tap floor switching
-      pinnedSplits: [],   // [splitId] pinned for active floor sessions
-      activeDays: {},     // { [splitId]: dayId }
+      activeView: 'all',
+      pinnedSplits: [],
+      activeDays: {},
       exercises: DEFAULT_EXERCISES
     };
+
+    let cmdSelectedIdx = 0;
+    let cmdItemsCache = [];
+    let pendingHighlightId = null;
 
     function loadState() {
       try {
@@ -543,6 +714,10 @@
       return Object.values(state.exercises).reduce((sum, list) => sum + (Array.isArray(list) ? list.length : 0), 0);
     }
 
+    function getTotalDaysCount() {
+      return PROGRAM_STRUCTURE.reduce((sum, cat) => sum + cat.splits.reduce((s, sp) => s + sp.days.length, 0), 0);
+    }
+
     function getSplitExerciseCount(split) {
       return split.days.reduce((sum, day) => sum + (state.exercises[day.id]?.length || 0), 0);
     }
@@ -570,30 +745,58 @@
     }
 
     function getAllSplitsFlat() {
-      const shortLabels = {
-        'beg-full-body': 'Full Body · 3-Day',
-        'beg-ppl': 'PPL · 3-Day',
-        'men-4day': 'Men · 4-Day',
-        'women-4day': 'Women · 4-Day',
-        'knee-4day': 'Knee · 4-Day',
-        'fat-loss-3day': 'Fat Loss · 3-Day',
-        'me-6day': 'Me · 6-Day'
-      };
       const all = [];
       PROGRAM_STRUCTURE.forEach(cat => {
         cat.splits.forEach(split => {
           all.push({
             id: split.id,
-            shortName: shortLabels[split.id] || split.name,
-            pinned: state.pinnedSplits.includes(split.id)
+            catId: cat.id,
+            catName: cat.name,
+            tag: cat.tag || '',
+            accent: cat.accent || 'slate',
+            description: cat.description || '',
+            name: split.name,
+            shortName: SHORT_LABELS[split.id] || split.name,
+            daysCount: split.days.length,
+            daysLabel: split.daysLabel,
+            exerciseCount: getSplitExerciseCount(split),
+            pinned: state.pinnedSplits.includes(split.id),
+            split,
+            cat
           });
         });
       });
       return all.sort((a, b) => Number(b.pinned) - Number(a.pinned));
     }
 
-    function renderNav() {
-      const nav = document.getElementById('categoryNav');
+    function getNoteStyle(note) {
+      const n = String(note || '').toLowerCase();
+      if (n.includes('finisher') || n.includes('fat burn')) {
+        return {
+          pill: 'bg-amber-50/90 border-amber-200/80 text-amber-800',
+          dot: 'bg-amber-500'
+        };
+      }
+      if (n.includes('cardio')) {
+        return {
+          pill: 'bg-blue-50/90 border-blue-200/80 text-blue-700',
+          dot: 'bg-blue-500'
+        };
+      }
+      if (n.includes('core')) {
+        return {
+          pill: 'bg-emerald-50/90 border-emerald-200/80 text-emerald-700',
+          dot: 'bg-emerald-500'
+        };
+      }
+      return {
+        pill: 'bg-slate-100 border-slate-200/80 text-secondary',
+        dot: 'bg-slate-400'
+      };
+    }
+
+    function renderMobileNav() {
+      const nav = document.getElementById('mobileSplitNav');
       const flatSplits = getAllSplitsFlat();
       const allActive = state.activeView === 'all';
 
@@ -601,13 +804,14 @@
         <button
           type="button"
           data-view-tab="all"
-          class="shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all min-h-[40px] ${
+          class="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all min-h-[38px] ${
             allActive
-              ? 'bg-ink text-white shadow-soft'
-              : 'bg-surface text-muted hover:text-ink hover:bg-slate-200/70 border border-line'
+              ? 'bg-ink text-white shadow-[0_2px_8px_rgba(15,23,42,0.2)]'
+              : 'bg-white/90 text-secondary hover:text-ink border border-slate-200/80'
           }"
         >
-          All Splits
+          <i data-lucide="layout-grid" class="w-3.5 h-3.5 ${allActive ? 'text-blue-400' : 'text-faint'}"></i>
+          <span>All</span>
         </button>
       `;
 
@@ -617,187 +821,579 @@
           <button
             type="button"
             data-view-tab="${item.id}"
-            class="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all min-h-[40px] ${
+            class="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all min-h-[38px] ${
               active
-                ? 'bg-neutral-950 text-white shadow-soft'
+                ? 'bg-ink text-white shadow-[0_2px_8px_rgba(15,23,42,0.2)]'
                 : item.pinned
-                  ? 'bg-white text-neutral-950 border-2 border-neutral-950 hover:bg-neutral-100'
-                  : 'bg-white text-neutral-800 hover:bg-neutral-100 border border-neutral-200'
+                  ? 'bg-white text-ink border border-blue-300 ring-1 ring-blue-100'
+                  : 'bg-white/90 text-secondary hover:text-ink border border-slate-200/80'
             }"
           >
-            ${item.pinned ? `<span class="w-1.5 h-1.5 rounded-full ${active ? 'bg-white' : 'bg-neutral-950'}"></span>` : ''}
+            ${item.pinned ? `<span class="w-1.5 h-1.5 rounded-full ${active ? 'bg-blue-400' : 'bg-cobalt-600'}"></span>` : ''}
             <span>${escapeHtml(item.shortName)}</span>
+            <span class="font-mono text-[10px] px-1.5 py-0.5 rounded-md ${active ? 'bg-white/15 text-slate-200' : 'bg-subtle text-muted'}">${item.daysCount}D</span>
           </button>
         `;
       }).join('');
 
       nav.innerHTML = allBtn + splitBtns;
+
+      const mobileLabel = document.getElementById('mobileActiveLabel');
+      if (mobileLabel) {
+        const current = flatSplits.find(s => s.id === state.activeView);
+        mobileLabel.textContent = current ? current.shortName : 'All Splits';
+      }
     }
 
+    function renderDesktopRail() {
+      const rail = document.getElementById('desktopRail');
+      if (!rail) return;
+      const flat = getAllSplitsFlat();
+      const pinned = flat.filter(s => s.pinned);
+      const unpinned = flat.filter(s => !s.pinned);
+      const allActive = state.activeView === 'all';
 
+      const renderRailItem = (item) => {
+        const active = state.activeView === item.id;
+        return `
+          <div class="group relative flex items-center">
+            <button
+              type="button"
+              data-view-tab="${item.id}"
+              class="w-full text-left flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all ${
+                active
+                  ? 'bg-white text-ink font-semibold shadow-[0_0_0_1px_rgba(15,23,42,0.08),0_2px_8px_rgba(15,23,42,0.05)]'
+                  : 'text-secondary hover:text-ink hover:bg-white/60'
+              }"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="w-1.5 h-1.5 rounded-full shrink-0 ${
+                  active ? 'bg-cobalt-600' : item.pinned ? 'bg-blue-400' : 'bg-slate-300 group-hover:bg-slate-400'
+                }"></span>
+                <span class="truncate">${escapeHtml(item.shortName)}</span>
+              </div>
+              <span class="font-mono text-[11px] px-1.5 py-0.5 rounded-md shrink-0 ${
+                active ? 'bg-ink text-white' : 'bg-slate-200/60 text-muted'
+              }">${item.daysCount}D</span>
+            </button>
+          </div>
+        `;
+      };
 
-    function renderCategories() {
+      rail.innerHTML = `
+        <div class="space-y-1">
+          <button
+            type="button"
+            data-view-tab="all"
+            class="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all ${
+              allActive
+                ? 'bg-ink text-white font-semibold shadow-[0_2px_10px_rgba(15,23,42,0.18)]'
+                : 'text-secondary hover:text-ink hover:bg-white/70'
+            }"
+          >
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="layout-grid" class="w-4 h-4 ${allActive ? 'text-blue-400' : 'text-faint'}"></i>
+              <span>All Splits</span>
+            </span>
+            <span class="font-mono text-[11px] px-1.5 py-0.5 rounded-md ${allActive ? 'bg-white/15 text-white' : 'bg-slate-200/70 text-muted'}">${flat.length}</span>
+          </button>
+        </div>
 
-      const container = document.getElementById('categoriesContainer');
-      const visibleCategories = state.activeView === 'all'
-        ? PROGRAM_STRUCTURE
-        : PROGRAM_STRUCTURE
-            .map(c => ({ ...c, splits: c.splits.filter(s => s.id === state.activeView) }))
-            .filter(c => c.splits.length > 0);
+        ${pinned.length > 0 ? `
+          <div class="space-y-1">
+            <div class="px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-faint">Pinned</div>
+            ${pinned.map(renderRailItem).join('')}
+          </div>
+        ` : ''}
 
-      container.innerHTML = visibleCategories.map(cat => {
-        const splitsHtml = cat.splits.map(split => {
-          const activeDayId = state.activeDays[split.id] || split.days[0].id;
-          const activeDay = split.days.find(d => d.id === activeDayId) || split.days[0];
-          const dayExercises = state.exercises[activeDay.id] || [];
-          const splitTotal = getSplitExerciseCount(split);
+        <div class="space-y-1">
+          <div class="px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-faint">${pinned.length > 0 ? 'Programs' : 'Training Splits'}</div>
+          ${unpinned.map(renderRailItem).join('')}
+        </div>
+      `;
+    }
 
-          const dayTabsHtml = split.days.map(day => {
-            const isSelected = day.id === activeDay.id;
-            const count = (state.exercises[day.id] || []).length;
-            return `
-              <button
-                type="button"
-                data-split-id="${split.id}"
-                data-day-id="${day.id}"
-                class="flex-1 min-w-[116px] sm:min-w-0 text-left px-3.5 py-2.5 rounded-xl border transition-all ${
-                  isSelected
-                    ? 'bg-neutral-950 text-white border-neutral-950 shadow-[0_8px_20px_-6px_rgba(0,0,0,0.32)]'
-                    : 'bg-neutral-50 border-neutral-200 hover:bg-white hover:border-neutral-400 text-ink'
-                }"
-              >
-                <div class="flex items-center justify-between gap-1.5">
-                  <span class="font-mono text-[10px] font-bold uppercase tracking-[0.12em] ${isSelected ? 'text-neutral-300' : 'text-neutral-500'}">
-                    ${escapeHtml(day.title)}
-                  </span>
-                  <span class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                    isSelected ? 'bg-white text-neutral-950' : 'bg-neutral-200 text-neutral-800'
-                  }">${count}</span>
-                </div>
-                <div class="font-display text-xs sm:text-sm font-bold truncate mt-0.5 ${isSelected ? 'text-white' : 'text-neutral-950'}">
-                  ${escapeHtml(day.focus)}
-                </div>
-              </button>
-            `;
-          }).join('');
+    function renderOverviewView() {
+      const flat = getAllSplitsFlat();
+      return `
+        <div class="space-y-6 animate-stage">
+          <!-- Clean Editorial Header -->
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.1em] text-cobalt-600">Program Directory</p>
+              <h2 class="font-display font-extrabold text-2xl sm:text-[28px] tracking-[-0.03em] text-ink mt-1">
+                Training Splits
+              </h2>
+              <p class="text-[14px] text-secondary mt-1">
+                Select any split or jump directly to a specific training day.
+              </p>
+            </div>
+          </div>
 
-          const exercisesListHtml = `
-              <div class="space-y-2.5">
-                ${dayExercises.map((ex, idx) => `
-                  <div class="flex items-start gap-3.5 p-3.5 sm:p-4 rounded-xl border border-neutral-200/90 bg-white hover:border-neutral-900 hover:-translate-y-[1px] transition-all duration-150 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)]">
-                    <span class="w-7 h-7 rounded-lg bg-neutral-950 text-white font-mono text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                      0${idx + 1}
-                    </span>
-                    <div class="min-w-0">
-                      <div class="text-sm sm:text-[15px] font-bold text-neutral-950 tracking-[-0.01em] break-words leading-snug">
-                        <span>${escapeHtml(ex.primary)}</span>${ex.alternative ? `<span class="text-neutral-400 font-mono font-semibold mx-1.5">/</span><span>${escapeHtml(ex.alternative)}</span>` : ''}
-                      </div>
-                      ${(ex.duration || ex.sets || ex.reps || ex.notes) ? `
-                        <div class="flex flex-wrap items-center gap-2 mt-1.5">
-                          ${ex.duration ? `
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-neutral-950 text-white font-mono text-[11px] font-semibold">
-                              ${escapeHtml(ex.duration)}
-                            </span>
-                          ` : (ex.sets || ex.reps) ? `
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-neutral-100 border border-neutral-200 text-neutral-800 font-mono text-[11px] font-semibold">
-                              ${ex.reps === 'to failure' ? `${escapeHtml(ex.sets || '—')} sets to failure` : `${escapeHtml(ex.sets || '—')} sets × ${escapeHtml(ex.reps || '—')}${(String(ex.reps || '').endsWith('s') || String(ex.reps || '').includes('min')) ? '' : ' reps'}`}
-                            </span>
-                          ` : ''}
-                          ${ex.notes ? `
-                            <span class="text-xs text-muted">${escapeHtml(ex.notes)}</span>
-                          ` : ''}
-                        </div>
-                      ` : ''}
+          <!-- Split Overview Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            ${flat.map(item => {
+              const tagCls = TAG_STYLES[item.accent] || TAG_STYLES.slate;
+              return `
+                <article
+                  data-view-tab="${item.id}"
+                  class="pro-card-interactive p-5 cursor-pointer flex flex-col justify-between gap-4 group"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-semibold ${tagCls}">
+                        ${escapeHtml(item.tag)}
+                      </span>
+                      <button
+                        type="button"
+                        data-pin-split="${item.id}"
+                        class="p-1.5 rounded-lg border transition-colors ${
+                          item.pinned
+                            ? 'bg-ink border-ink text-white'
+                            : 'bg-white border-slate-200/80 text-faint hover:text-ink hover:border-slate-300'
+                        }"
+                        title="${item.pinned ? 'Unpin split' : 'Pin split'}"
+                        aria-label="${item.pinned ? 'Unpin split' : 'Pin split'}"
+                      >
+                        <i data-lucide="pin" class="w-3.5 h-3.5 ${item.pinned ? 'text-blue-300' : ''}"></i>
+                      </button>
+                    </div>
+
+                    <div class="mt-3">
+                      <h3 class="font-display font-bold text-[18px] tracking-[-0.02em] text-ink group-hover:text-cobalt-600 transition-colors">
+                        ${escapeHtml(item.catName)}
+                      </h3>
+                      <p class="text-[13px] text-secondary mt-1 leading-relaxed">
+                        ${escapeHtml(item.description)}
+                      </p>
+                    </div>
+
+                    <!-- Direct Day Jump Chips -->
+                    <div class="flex flex-wrap gap-1.5 mt-4">
+                      ${item.split.days.map((d, dIdx) => `
+                        <button
+                          type="button"
+                          data-jump-split="${item.id}"
+                          data-jump-day="${d.id}"
+                          class="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[34px] rounded-lg bg-subtle hover:bg-ink hover:text-white active:scale-[0.98] text-[12px] font-medium text-secondary transition-all"
+                          title="Open ${escapeHtml(d.title)}: ${escapeHtml(d.focus)}"
+                        >
+                          <span class="font-mono text-[10px] opacity-65">D${dIdx + 1}</span>
+                          <span class="truncate max-w-[130px]">${escapeHtml(d.focus)}</span>
+                        </button>
+                      `).join('')}
                     </div>
                   </div>
-                `).join('')}
-              </div>
-            `;
 
-          return `
-            <article class="bg-white/90 backdrop-blur-md border border-neutral-200/90 rounded-2xl shadow-[0_14px_38px_-14px_rgba(0,0,0,0.10),0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden">
-              <!-- Split Header -->
-              <div class="px-4 sm:px-6 py-4 border-b border-line flex flex-wrap items-center justify-between gap-2 bg-white">
-                <div>
-                  <h4 class="font-display font-bold text-base sm:text-lg text-ink">${escapeHtml(split.name)}</h4>
-                  <p class="text-xs text-muted mt-0.5">${escapeHtml(split.daysLabel)} · ${splitTotal} ${splitTotal === 1 ? 'exercise' : 'exercises'}</p>
-                </div>
-                <button
-                  type="button"
-                  data-pin-split="${split.id}"
-                  class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-colors min-h-[38px] ${
-                    state.pinnedSplits.includes(split.id)
-                      ? 'bg-neutral-950 border-neutral-950 text-white hover:bg-neutral-800'
-                      : 'bg-white border-neutral-200 text-neutral-700 hover:text-neutral-950 hover:border-neutral-400'
-                  }"
-                  title="Pin to front of top bar for active floor coaching"
-                >
-                  <i data-lucide="pin" class="w-3.5 h-3.5"></i>
-                  <span>${state.pinnedSplits.includes(split.id) ? 'Pinned' : 'Pin'}</span>
-                </button>
-              </div>
-
-              <!-- Day Selector Strip -->
-              <div class="px-4 sm:px-6 pt-4 pb-2 flex items-stretch gap-2 overflow-x-auto no-scrollbar">
-                ${dayTabsHtml}
-              </div>
-
-              <!-- Active Day Body -->
-              <div class="p-4 sm:p-6 pt-3">
-                <div class="flex items-center justify-between mb-3">
-                  <div class="flex items-center gap-2">
-                    <span class="font-mono text-xs font-bold uppercase tracking-wider text-neutral-950">${escapeHtml(activeDay.title)}</span>
-                    <span class="text-slate-300">·</span>
-                    <span class="text-sm font-semibold text-ink">${escapeHtml(activeDay.focus)}</span>
+                  <div class="flex items-center justify-between pt-3.5 border-t border-slate-100">
+                    <div class="flex items-center gap-2 text-[12px] font-medium text-muted">
+                      <span>${escapeHtml(item.daysLabel)}</span>
+                      <span class="text-slate-300">·</span>
+                      <span>${item.exerciseCount} exercises</span>
+                    </div>
+                    <span class="inline-flex items-center gap-1 text-[13px] font-semibold text-ink group-hover:text-cobalt-600 transition-colors">
+                      Open <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"></i>
+                    </span>
                   </div>
-                  <span class="text-xs font-medium text-muted">${dayExercises.length} ${dayExercises.length === 1 ? 'exercise' : 'exercises'}</span>
-                </div>
-                ${exercisesListHtml}
-              </div>
-            </article>
-          `;
-        }).join('');
+                </article>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
 
-        return `
-          <section class="space-y-3.5" aria-labelledby="cat-${cat.id}">
-            <div class="flex items-end justify-between gap-3 px-1">
-              <div>
-                <div class="flex items-center gap-2">
-                  <h3 id="cat-${cat.id}" class="font-display font-extrabold text-lg sm:text-xl text-ink tracking-tight">
-                    ${escapeHtml(cat.name)}
-                  </h3>
-                </div>
+    function renderExerciseRow(ex, idx) {
+      const isHighlighted = pendingHighlightId === ex.id;
+      const numStr = String(idx + 1).padStart(2, '0');
+      const noteStyle = ex.notes ? getNoteStyle(ex.notes) : null;
+      const dotColor = noteStyle ? noteStyle.dot : 'bg-slate-300';
+
+      const volumeText = ex.duration
+        ? escapeHtml(ex.duration)
+        : (ex.sets || ex.reps)
+          ? (ex.reps === 'to failure'
+              ? `${escapeHtml(ex.sets || '—')} sets · to failure`
+              : `${escapeHtml(ex.sets || '—')} × ${escapeHtml(ex.reps || '—')}${(String(ex.reps || '').endsWith('s') || String(ex.reps || '').includes('min')) ? '' : ' reps'}`)
+          : '';
+
+      return `
+        <div
+          id="ex-${escapeHtml(ex.id)}"
+          class="exercise-row flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-4 sm:px-6 py-4 ${isHighlighted ? 'flash-row' : ''}"
+        >
+          <div class="flex items-start sm:items-center gap-3.5 min-w-0">
+            <span class="font-mono text-[12px] font-semibold text-faint w-6 shrink-0 mt-0.5 sm:mt-0">
+              ${numStr}
+            </span>
+            <span class="w-1.5 h-1.5 rounded-full ${dotColor} shrink-0 mt-2 sm:mt-0"></span>
+            <div class="min-w-0">
+              <div class="text-[15px] font-semibold text-ink tracking-[-0.01em] leading-snug break-words">
+                ${escapeHtml(ex.primary)}
               </div>
+              ${ex.alternative ? `
+                <div class="flex items-center gap-1.5 mt-1 text-[12.5px] text-muted">
+                  <span class="px-1.5 py-0.5 rounded bg-subtle font-mono text-[10px] font-semibold uppercase tracking-wide text-secondary shrink-0">Alt</span>
+                  <span class="truncate sm:whitespace-normal">${escapeHtml(ex.alternative)}</span>
+                </div>
+              ` : ''}
             </div>
-            <div class="space-y-5">
-              ${splitsHtml}
+          </div>
+
+          ${(volumeText || ex.notes) ? `
+            <div class="flex flex-wrap items-center gap-2 pl-[54px] sm:pl-0 shrink-0">
+              ${ex.notes ? `
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-semibold ${noteStyle.pill}">
+                  ${escapeHtml(ex.notes)}
+                </span>
+              ` : ''}
+              ${volumeText ? `
+                <span class="inline-flex items-center px-3 py-1 rounded-lg font-mono text-[12px] font-medium ${
+                  ex.duration
+                    ? 'bg-ink text-white'
+                    : 'bg-subtle text-ink border border-slate-200/70'
+                }">
+                  ${volumeText}
+                </span>
+              ` : ''}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function renderFocusedSplitView(splitId) {
+      const flat = getAllSplitsFlat();
+      const idx = flat.findIndex(s => s.id === splitId);
+      if (idx === -1) {
+        state.activeView = 'all';
+        saveState();
+        return renderOverviewView();
+      }
+
+      const item = flat[idx];
+      const { cat, split } = item;
+      const prev = flat[(idx - 1 + flat.length) % flat.length];
+      const next = flat[(idx + 1) % flat.length];
+
+      const activeDayId = state.activeDays[split.id] || split.days[0].id;
+      const activeDay = split.days.find(d => d.id === activeDayId) || split.days[0];
+      const dayExercises = state.exercises[activeDay.id] || [];
+      const tagCls = TAG_STYLES[cat.accent] || TAG_STYLES.slate;
+
+      return `
+        <div class="space-y-5 animate-stage">
+          <!-- Top Breadcrumb & Split Stepper -->
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <button
+              type="button"
+              data-view-tab="all"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/90 text-[13px] font-medium text-secondary hover:text-ink shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-all"
+            >
+              <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+              <span>All Splits</span>
+            </button>
+
+            <div class="hidden sm:flex items-center gap-1.5">
+              <button
+                type="button"
+                data-view-tab="${prev.id}"
+                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/90 text-[12px] font-medium text-secondary hover:text-ink shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-all"
+                title="Previous: ${escapeHtml(prev.shortName)}"
+              >
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5 text-faint"></i>
+                <span>${escapeHtml(prev.shortName)}</span>
+              </button>
+              <span class="font-mono text-[11px] text-faint px-1.5">${idx + 1}/${flat.length}</span>
+              <button
+                type="button"
+                data-view-tab="${next.id}"
+                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/90 text-[12px] font-medium text-secondary hover:text-ink shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-all"
+                title="Next: ${escapeHtml(next.shortName)}"
+              >
+                <span>${escapeHtml(next.shortName)}</span>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-faint"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Split Header Card -->
+          <section class="pro-card overflow-hidden">
+            <div class="px-5 sm:px-6 py-5 border-b border-slate-100 flex flex-wrap items-start justify-between gap-4">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-semibold ${tagCls}">
+                    ${escapeHtml(cat.tag || cat.name)}
+                  </span>
+                  <span class="text-[12px] font-medium text-muted">
+                    ${escapeHtml(split.daysLabel)} · ${item.exerciseCount} exercises total
+                  </span>
+                </div>
+                <h2 class="font-display font-extrabold text-xl sm:text-2xl tracking-[-0.025em] text-ink mt-2">
+                  ${escapeHtml(split.name)}
+                </h2>
+                ${cat.description ? `<p class="text-[13.5px] text-secondary mt-1">${escapeHtml(cat.description)}</p>` : ''}
+              </div>
+
+              <button
+                type="button"
+                data-pin-split="${split.id}"
+                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-[13px] font-semibold transition-all min-h-[38px] ${
+                  item.pinned
+                    ? 'bg-ink border-ink text-white shadow-[0_2px_8px_rgba(15,23,42,0.18)]'
+                    : 'bg-white border-slate-200 text-secondary hover:text-ink hover:border-slate-300'
+                }"
+                title="Pin to front for quick floor access"
+              >
+                <i data-lucide="pin" class="w-3.5 h-3.5 ${item.pinned ? 'text-blue-400' : ''}"></i>
+                <span>${item.pinned ? 'Pinned' : 'Pin Split'}</span>
+              </button>
+            </div>
+
+            <!-- Day Switcher Bar -->
+            <div class="px-4 sm:px-6 py-3.5 bg-slate-50/70 border-b border-slate-100 flex items-stretch gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+              ${split.days.map((day, dIdx) => {
+                const isSelected = day.id === activeDay.id;
+                const count = (state.exercises[day.id] || []).length;
+                const dayNum = String(dIdx + 1).padStart(2, '0');
+                return `
+                  <button
+                    type="button"
+                    data-split-id="${split.id}"
+                    data-day-id="${day.id}"
+                    class="flex-1 min-w-[138px] sm:min-w-0 text-left px-3.5 py-2.5 rounded-xl transition-all ${
+                      isSelected
+                        ? 'bg-ink text-white shadow-[0_4px_14px_-2px_rgba(15,23,42,0.28)]'
+                        : 'bg-white/90 hover:bg-white border border-slate-200/80 hover:border-slate-300 text-ink'
+                    }"
+                  >
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] ${isSelected ? 'text-blue-300' : 'text-faint'}">
+                        Day ${dayNum}
+                      </span>
+                      <span class="font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded-md ${
+                        isSelected ? 'bg-white/15 text-white' : 'bg-subtle text-muted'
+                      }">${count}</span>
+                    </div>
+                    <div class="text-[13px] font-semibold truncate mt-0.5 ${isSelected ? 'text-white' : 'text-ink'}">
+                      ${escapeHtml(day.focus)}
+                    </div>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- Active Session Header -->
+            <div class="px-4 sm:px-6 py-3.5 bg-white border-b border-slate-100 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="px-2 py-0.5 rounded-md bg-subtle font-mono text-[11px] font-semibold text-ink shrink-0">
+                  ${escapeHtml(activeDay.title)}
+                </span>
+                <h3 class="font-display font-bold text-[15px] sm:text-[16px] text-ink truncate">
+                  ${escapeHtml(activeDay.focus)}
+                </h3>
+              </div>
+              <span class="text-[12px] font-medium text-muted shrink-0">
+                ${dayExercises.length} ${dayExercises.length === 1 ? 'exercise' : 'exercises'}
+              </span>
+            </div>
+
+            <!-- Precision Exercise List -->
+            <div class="divide-y divide-slate-100">
+              ${dayExercises.map((ex, eIdx) => renderExerciseRow(ex, eIdx)).join('')}
             </div>
           </section>
-        `;
-      }).join('');
+        </div>
+      `;
+    }
+
+    function renderMainStage() {
+      const stage = document.getElementById('mainStage');
+      if (state.activeView === 'all') {
+        stage.innerHTML = renderOverviewView();
+      } else {
+        stage.innerHTML = renderFocusedSplitView(state.activeView);
+      }
 
       if (window.lucide) {
         window.lucide.createIcons();
       }
+
+      if (pendingHighlightId) {
+        const targetEl = document.getElementById('ex-' + pendingHighlightId);
+        if (targetEl) {
+          setTimeout(() => {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 80);
+        }
+        pendingHighlightId = null;
+      }
     }
 
     function renderAll() {
-      renderNav();
-      renderCategories();
+      renderMobileNav();
+      renderDesktopRail();
+      renderMainStage();
     }
 
-    document.addEventListener('click', (e) => {
-      const viewBtn = e.target.closest('[data-view-tab]');
-      if (viewBtn) {
-        state.activeView = viewBtn.dataset.viewTab;
-        saveState();
-        renderAll();
+    // Command Palette Logic
+    function buildCmdItems(query) {
+      const q = (query || '').trim().toLowerCase();
+      const items = [];
+
+      items.push({
+        type: 'view',
+        id: 'all',
+        title: 'All Splits Overview',
+        subtitle: 'Program directory & quick day matrix',
+        badge: 'OVERVIEW',
+        action: () => { state.activeView = 'all'; }
+      });
+
+      PROGRAM_STRUCTURE.forEach(cat => {
+        cat.splits.forEach(split => {
+          items.push({
+            type: 'split',
+            id: split.id,
+            title: `${cat.name} — ${split.name}`,
+            subtitle: `${split.daysLabel} · ${getSplitExerciseCount(split)} exercises`,
+            badge: 'SPLIT',
+            action: () => { state.activeView = split.id; }
+          });
+
+          split.days.forEach(day => {
+            items.push({
+              type: 'day',
+              id: `${split.id}:${day.id}`,
+              title: `${SHORT_LABELS[split.id] || cat.name} · ${day.title}: ${day.focus}`,
+              subtitle: `${(state.exercises[day.id] || []).length} exercises`,
+              badge: 'DAY',
+              action: () => {
+                state.activeView = split.id;
+                state.activeDays[split.id] = day.id;
+              }
+            });
+
+            if (q.length >= 2) {
+              (state.exercises[day.id] || []).forEach(ex => {
+                items.push({
+                  type: 'exercise',
+                  id: ex.id,
+                  title: ex.primary,
+                  subtitle: `${SHORT_LABELS[split.id] || cat.name} · ${day.title} (${day.focus})${ex.alternative ? ' · Alt: ' + ex.alternative : ''}`,
+                  badge: 'EXERCISE',
+                  action: () => {
+                    state.activeView = split.id;
+                    state.activeDays[split.id] = day.id;
+                    pendingHighlightId = ex.id;
+                  }
+                });
+              });
+            }
+          });
+        });
+      });
+
+      if (!q) {
+        return items.filter(it => it.type === 'view' || it.type === 'split');
+      }
+
+      return items.filter(it =>
+        it.title.toLowerCase().includes(q) || it.subtitle.toLowerCase().includes(q)
+      ).slice(0, 18);
+    }
+
+    function renderCmdResults() {
+      const input = document.getElementById('cmdInput');
+      const container = document.getElementById('cmdResults');
+      cmdItemsCache = buildCmdItems(input.value);
+      if (cmdSelectedIdx >= cmdItemsCache.length) cmdSelectedIdx = 0;
+
+      if (cmdItemsCache.length === 0) {
+        container.innerHTML = `
+          <div class="py-10 text-center text-[13px] text-muted">
+            No matching splits, days, or exercises found.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = cmdItemsCache.map((item, idx) => {
+        const selected = idx === cmdSelectedIdx;
+        return `
+          <button
+            type="button"
+            data-cmd-idx="${idx}"
+            class="w-full text-left px-3.5 py-2.5 rounded-xl flex items-center justify-between gap-3 transition-colors ${
+              selected ? 'bg-ink text-white' : 'hover:bg-subtle text-ink'
+            }"
+          >
+            <div class="min-w-0">
+              <div class="text-[13.5px] font-semibold truncate">${escapeHtml(item.title)}</div>
+              <div class="text-[12px] truncate ${selected ? 'text-slate-300' : 'text-muted'}">${escapeHtml(item.subtitle)}</div>
+            </div>
+            <span class="shrink-0 font-mono text-[10px] font-semibold px-2 py-0.5 rounded-md ${
+              selected ? 'bg-white/15 text-blue-300' : 'bg-subtle text-muted'
+            }">${item.badge}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function openCmdModal() {
+      const modal = document.getElementById('cmdModal');
+      const input = document.getElementById('cmdInput');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      input.value = '';
+      cmdSelectedIdx = 0;
+      renderCmdResults();
+      setTimeout(() => input.focus(), 20);
+    }
+
+    function closeCmdModal() {
+      const modal = document.getElementById('cmdModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function executeCmdItem(idx) {
+      const item = cmdItemsCache[idx];
+      if (!item) return;
+      item.action();
+      saveState();
+      closeCmdModal();
+      renderAll();
+      if (!pendingHighlightId) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function cycleSplit(direction) {
+      const flat = getAllSplitsFlat();
+      if (state.activeView === 'all') {
+        state.activeView = direction > 0 ? flat[0].id : flat[flat.length - 1].id;
+      } else {
+        const idx = flat.findIndex(s => s.id === state.activeView);
+        const nextIdx = (idx + direction + flat.length) % flat.length;
+        state.activeView = flat[nextIdx].id;
+      }
+      saveState();
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Event Delegation
+    document.addEventListener('click', (e) => {
+      const cmdItemBtn = e.target.closest('[data-cmd-idx]');
+      if (cmdItemBtn) {
+        executeCmdItem(Number(cmdItemBtn.dataset.cmdIdx));
         return;
       }
 
       const pinBtn = e.target.closest('[data-pin-split]');
       if (pinBtn) {
+        e.stopPropagation();
         const sid = pinBtn.dataset.pinSplit;
         if (state.pinnedSplits.includes(sid)) {
           state.pinnedSplits = state.pinnedSplits.filter(x => x !== sid);
@@ -811,6 +1407,28 @@
         return;
       }
 
+      const jumpDayBtn = e.target.closest('[data-jump-day]');
+      if (jumpDayBtn) {
+        e.stopPropagation();
+        const sid = jumpDayBtn.dataset.jumpSplit;
+        const did = jumpDayBtn.dataset.jumpDay;
+        state.activeView = sid;
+        state.activeDays[sid] = did;
+        saveState();
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const viewBtn = e.target.closest('[data-view-tab]');
+      if (viewBtn) {
+        state.activeView = viewBtn.dataset.viewTab;
+        saveState();
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
       const dayBtn = e.target.closest('[data-day-id]');
       if (dayBtn) {
         const splitId = dayBtn.dataset.splitId;
@@ -818,6 +1436,55 @@
         state.activeDays[splitId] = dayId;
         saveState();
         renderAll();
+        return;
+      }
+
+      if (e.target.id === 'cmdModal') {
+        closeCmdModal();
+      }
+    });
+
+    document.getElementById('openCmdBtn').addEventListener('click', openCmdModal);
+    document.getElementById('mobileJumpBtn').addEventListener('click', openCmdModal);
+    document.getElementById('mobilePrevBtn').addEventListener('click', () => cycleSplit(-1));
+    document.getElementById('mobileNextBtn').addEventListener('click', () => cycleSplit(1));
+    document.getElementById('closeCmdBtn').addEventListener('click', closeCmdModal);
+    document.getElementById('cmdInput').addEventListener('input', () => {
+      cmdSelectedIdx = 0;
+      renderCmdResults();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('cmdModal');
+      const isModalOpen = !modal.classList.contains('hidden');
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (isModalOpen) closeCmdModal();
+        else openCmdModal();
+        return;
+      }
+
+      if (isModalOpen) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeCmdModal();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (cmdItemsCache.length > 0) {
+            cmdSelectedIdx = (cmdSelectedIdx + 1) % cmdItemsCache.length;
+            renderCmdResults();
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (cmdItemsCache.length > 0) {
+            cmdSelectedIdx = (cmdSelectedIdx - 1 + cmdItemsCache.length) % cmdItemsCache.length;
+            renderCmdResults();
+          }
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          executeCmdItem(cmdSelectedIdx);
+        }
       }
     });
 
