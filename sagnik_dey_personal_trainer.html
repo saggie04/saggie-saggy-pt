@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sagnik Dey — Personal Trainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            surface: '#FAFAFA',
+            card: '#FFFFFF',
+            ink: '#0A0A0A',
+            muted: '#737373',
+            line: '#E5E5E5',
+            brand: {
+              50: '#F5F5F5',
+              100: '#E5E5E5',
+              500: '#171717',
+              600: '#0A0A0A',
+              700: '#000000',
+            }
+          },
+          boxShadow: {
+            soft: '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
+            card: '0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -2px rgba(15, 23, 42, 0.03)',
+            sheet: '0 -8px 30px rgba(15, 23, 42, 0.14)',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    html, body {
+      background-color: #F7F7F8;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 0, 0, 0.055), transparent 70%),
+        radial-gradient(rgba(0, 0, 0, 0.085) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 0, 0, 0.032) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.032) 1px, transparent 1px);
+      background-size: 100% 100%, 24px 24px, 96px 96px, 96px 96px;
+      background-attachment: fixed;
+      color: #0A0A0A;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-sheet {
+      animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-brand-100 selection:text-brand-700">
+
+  <!-- Sticky Top Navigation -->
+  <header class="sticky top-0 z-30 bg-white/85 backdrop-blur-xl border-b border-neutral-200 shadow-[0_1px_12px_rgba(0,0,0,0.04)]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="h-16 flex items-center justify-between gap-3">
+        <div class="flex items-center min-w-0">
+          <div class="min-w-0">
+            <h1 class="font-display font-bold text-lg sm:text-xl tracking-tight text-ink truncate">Sagnik Dey</h1>
+            <p class="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-500 leading-none mt-0.5">Personal Trainer</p>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- Category Filter Tabs (Mobile Scrollable) -->
+      <nav id="categoryNav" class="flex items-center gap-2 pb-3 overflow-x-auto no-scrollbar" aria-label="Program Categories">
+        <!-- Populated by JS -->
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-5 sm:py-8 space-y-6">
+
+
+    <!-- Categories & Splits Container -->
+    <div id="categoriesContainer" class="space-y-8">
+      <!-- Populated by JS -->
+    </div>
+  </main>
+
+
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-full bg-ink text-white text-xs font-semibold shadow-card items-center gap-2">
+    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toastText">Saved</span>
+  </div>
+
+  <script>
+    const PROGRAM_STRUCTURE = [
+      {
+        id: 'beginner',
+        name: 'Full Body Workout Program',
+        badge: '1 Split',
+        description: 'Foundational gym split with no cardio or explosive movements.',
+        accent: 'indigo',
+        splits: [
+          {
+            id: 'beg-full-body',
+            name: 'Full Body Workout (3-Day)',
+            daysLabel: '3 Days / Week',
+            days: [
+              { id: 'beg-fb-1', title: 'Day 1', focus: 'Full Body' },
+              { id: 'beg-fb-2', title: 'Day 2', focus: 'Full Body' },
+              { id: 'beg-fb-3', title: 'Day 3', focus: 'Full Body' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'ppl',
+        name: 'Push Pull Legs',
+        badge: '1 Split',
+        description: '3-day push pull legs split.',
+        accent: 'slate',
+        splits: [
+          {
+            id: 'beg-ppl',
+            name: 'Push Pull Legs (3-Day)',
+            daysLabel: '3 Days / Week',
+            days: [
+              { id: 'beg-ppl-1', title: 'Day 1', focus: 'Push' },
+              { id: 'beg-ppl-2', title: 'Day 2', focus: 'Pull' },
+              { id: 'beg-ppl-3', title: 'Day 3', focus: 'Legs' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'men',
+        name: 'Men',
+        badge: '1 Split',
+        description: '4-day bodybuilding & strength split.',
+        accent: 'blue',
+        splits: [
+          {
+            id: 'men-4day',
+            name: '4-Day Split',
+            daysLabel: '4 Days / Week',
+            days: [
+              { id: 'men-4d-1', title: 'Day 1', focus: 'Chest & Triceps' },
+              { id: 'men-4d-2', title: 'Day 2', focus: 'Back & Biceps' },
+              { id: 'men-4d-3', title: 'Day 3', focus: 'Shoulders, Traps & Abs' },
+              { id: 'men-4d-4', title: 'Day 4', focus: 'Legs & Calves' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'women',
+        name: 'Women',
+        badge: '1 Split',
+        description: '4-day upper & lower push-pull split.',
+        accent: 'violet',
+        splits: [
+          {
+            id: 'women-4day',
+            name: '4-Day Upper / Lower Push-Pull',
+            daysLabel: '4 Days / Week',
+            days: [
+              { id: 'wom-4d-1', title: 'Day 1', focus: 'Upper Push' },
+              { id: 'wom-4d-2', title: 'Day 2', focus: 'Lower Push' },
+              { id: 'wom-4d-3', title: 'Day 3', focus: 'Upper Pull' },
+              { id: 'wom-4d-4', title: 'Day 4', focus: 'Lower Pull' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'knee-injury',
+        name: 'Knee Injury Split',
+        badge: '1 Split',
+        description: 'Unified 4-day knee-friendly gym split.',
+        accent: 'emerald',
+        splits: [
+          {
+            id: 'knee-4day',
+            name: '4-Day Knee Injury Split',
+            daysLabel: '4 Days / Week',
+            days: [
+              { id: 'knee-4d-1', title: 'Day 1', focus: 'Upper Push' },
+              { id: 'knee-4d-2', title: 'Day 2', focus: 'Posterior Chain' },
+              { id: 'knee-4d-3', title: 'Day 3', focus: 'Upper Pull' },
+              { id: 'knee-4d-4', title: 'Day 4', focus: 'Glutes & Core' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'fat-loss',
+        name: 'Fat Loss Program',
+        badge: '1 Split',
+        description: 'High-output metabolic conditioning with reduced joint-friendly weight training.',
+        accent: 'slate',
+        splits: [
+          {
+            id: 'fat-loss-3day',
+            name: 'Extreme Fat Loss Protocol (3-Day)',
+            daysLabel: '3 Days / Week',
+            days: [
+              { id: 'fl-3d-1', title: 'Day 1', focus: 'Upper & Burn' },
+              { id: 'fl-3d-2', title: 'Day 2', focus: 'Lower & Burn' },
+              { id: 'fl-3d-3', title: 'Day 3', focus: 'Shoulders, Core & Burn' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'me',
+        name: 'Me',
+        badge: '1 Split',
+        description: 'My personal 6-day split.',
+        accent: 'slate',
+        splits: [
+          {
+            id: 'me-6day',
+            name: 'My Workout (6-Day)',
+            daysLabel: '6 Days / Week',
+            days: [
+              { id: 'me-6d-1', title: 'Day 1', focus: 'Back · 12 Sets' },
+              { id: 'me-6d-2', title: 'Day 2', focus: 'Chest & Side Delts · 12 Sets' },
+              { id: 'me-6d-3', title: 'Day 3', focus: 'Shoulders & Traps · 12 Sets' },
+              { id: 'me-6d-4', title: 'Day 4', focus: 'Arms · 12 Sets' },
+              { id: 'me-6d-5', title: 'Day 5', focus: 'Legs · 12 Sets' },
+              { id: 'me-6d-6', title: 'Day 6', focus: 'Abs & Conditioning' }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = 'sagnik_dey_pt_routines_v5';
+
+    const DEFAULT_EXERCISES = {
+      // Full Body 3-Day: Day 1 Slam Balls + Treadmill | Day 2 Battle Ropes + Treadmill | Day 3 Tire Hammers + Elliptical
+      'beg-fb-1': [
+        { id: 'bf1-1', primary: 'Goblet Squat', alternative: 'Leg Press', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bf1-2', primary: 'Flat Dumbbell Bench Press', alternative: 'Incline Dumbbell Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'bf1-3', primary: 'Lat Pulldown', alternative: 'Neutral Grip Lat Pulldown', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bf1-4', primary: 'Standing Military Press', alternative: 'Dumbbell Shoulder Press / Machine Shoulder Press', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bf1-5', primary: 'Plank', alternative: 'Sit-Ups', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bf1-6', primary: 'Slam Balls', alternative: '', sets: '3', reps: '12-15', notes: 'Finisher' },
+        { id: 'bf1-7', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'beg-fb-2': [
+        { id: 'bf2-1', primary: 'Leg Curl', alternative: 'Back Extension (Hyperextension)', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bf2-2', primary: 'Incline Dumbbell Press', alternative: 'Incline Barbell Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'bf2-3', primary: 'Seated Cable Row', alternative: 'One-Arm Dumbbell Row', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bf2-4', primary: 'Dumbbell Lateral Raise', alternative: 'Cable Lateral Raise', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bf2-5', primary: 'Dumbbell Bicep Curl', alternative: 'Tricep Rope Pushdown', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bf2-6', primary: 'Battle Ropes', alternative: '', sets: '3', reps: '30s', notes: 'Finisher' },
+        { id: 'bf2-7', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'beg-fb-3': [
+        { id: 'bf3-1', primary: 'Leg Press', alternative: 'Goblet Squat', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bf3-2', primary: 'Flat Barbell Bench Press', alternative: 'Flat Dumbbell Bench Press', sets: '3', reps: '8-10', notes: '' },
+        { id: 'bf3-3', primary: 'One-Arm Dumbbell Row', alternative: 'Lat Pulldown', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bf3-4', primary: 'Leg Curl', alternative: 'Leg Extension', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bf3-5', primary: 'Standing Calf Raise', alternative: 'Face Pull', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bf3-6', primary: 'Tire Hammers', alternative: '', sets: '3', reps: '10-12', notes: 'Finisher' },
+        { id: 'bf3-7', primary: 'Elliptical', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+
+      // Push Pull Legs 3-Day: Day 1 Slam Balls + Treadmill | Day 2 Battle Ropes + Treadmill | Day 3 Tire Hammers + Elliptical
+      'beg-ppl-1': [
+        { id: 'bp1-1', primary: 'Flat Barbell Bench Press', alternative: 'Flat Dumbbell Bench Press', sets: '3', reps: '8-10', notes: '' },
+        { id: 'bp1-2', primary: 'Incline Dumbbell Press', alternative: 'Incline Barbell Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'bp1-3', primary: 'Standing Military Press', alternative: 'Dumbbell Shoulder Press / Machine Shoulder Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'bp1-4', primary: 'Dumbbell Lateral Raise', alternative: 'Cable Lateral Raise', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bp1-5', primary: 'Straight Bar Pushdowns', alternative: 'Triceps Rope Pushdown', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bp1-6', primary: 'Skull Crushers', alternative: 'Overhead Dumbbell Extension', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bp1-7', primary: 'Slam Balls', alternative: '', sets: '3', reps: '12-15', notes: 'Finisher' },
+        { id: 'bp1-8', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'beg-ppl-2': [
+        { id: 'bp2-1', primary: 'Lat Pulldown', alternative: 'Neutral Grip Lat Pulldown', sets: '3', reps: '8-12', notes: '' },
+        { id: 'bp2-2', primary: 'Seated Cable Row', alternative: 'One-Arm Dumbbell Row', sets: '3', reps: '8-12', notes: '' },
+        { id: 'bp2-3', primary: 'One-Arm Dumbbell Row', alternative: 'Straight-Arm Pulldown', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bp2-4', primary: 'Face Pull', alternative: 'Bent-Over Dumbbell Rear Delt Fly', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bp2-5', primary: 'Barbell Bicep Curl', alternative: 'Dumbbell Hammer Curl', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bp2-6', primary: 'Plank', alternative: '', sets: '3', reps: '45-60s', notes: '' },
+        { id: 'bp2-7', primary: 'Battle Ropes', alternative: '', sets: '3', reps: '30s', notes: 'Finisher' },
+        { id: 'bp2-8', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'beg-ppl-3': [
+        { id: 'bp3-1', primary: 'Barbell Back Squat', alternative: 'Leg Press', sets: '3', reps: '8-10', notes: '' },
+        { id: 'bp3-2', primary: 'Leg Extensions', alternative: '', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bp3-3', primary: 'Seated Leg Curls', alternative: '', sets: '3', reps: '10-12', notes: '' },
+        { id: 'bp3-4', primary: 'Calf Raises', alternative: '', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bp3-5', primary: 'Sit-Ups', alternative: '', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bp3-6', primary: 'Plank', alternative: 'Hanging Knee Raises', sets: '3', reps: '12-15', notes: '' },
+        { id: 'bp3-7', primary: 'Tire Hammers', alternative: '', sets: '3', reps: '10-12', notes: 'Finisher' },
+        { id: 'bp3-8', primary: 'Elliptical', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+
+      // Men 4-Day Split: Slam Balls, Battle Ropes, Tire Hammers, Boxing + 3 days Treadmill, 1 day Elliptical
+      'men-4d-1': [
+        { id: 'm1-1', primary: 'Flat Barbell Bench Press', alternative: 'Flat Dumbbell Bench Press', sets: '3', reps: '8-10', notes: '' },
+        { id: 'm1-2', primary: 'Incline Dumbbell Press', alternative: 'Incline Barbell Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'm1-3', primary: 'Pec Deck Fly', alternative: 'Cable Crossover', sets: '3', reps: '10-12', notes: '' },
+        { id: 'm1-4', primary: 'Tricep Rope Pushdown', alternative: 'Straight Bar Pushdown', sets: '3', reps: '10-12', notes: '' },
+        { id: 'm1-5', primary: 'Overhead Dumbbell Extension', alternative: 'EZ-Bar Skull Crusher', sets: '3', reps: '10-12', notes: '' },
+        { id: 'm1-6', primary: 'Slam Balls', alternative: '', sets: '3', reps: '12-15', notes: 'Finisher' },
+        { id: 'm1-7', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'men-4d-2': [
+        { id: 'm2-1', primary: 'Lat Pulldown', alternative: 'Neutral Grip Lat Pulldown / Pull-Up', sets: '3', reps: '8-12', notes: '' },
+        { id: 'm2-2', primary: 'Barbell Bent-Over Row', alternative: 'T-Bar Row', sets: '3', reps: '8-10', notes: '' },
+        { id: 'm2-3', primary: 'Seated Cable Row', alternative: 'One-Arm Dumbbell Row', sets: '3', reps: '10-12', notes: '' },
+        { id: 'm2-4', primary: 'EZ-Bar Curl', alternative: 'Incline Dumbbell Curl / Hammer Curl', sets: '3', reps: '8-12', notes: '' },
+        { id: 'm2-5', primary: 'Plank', alternative: '', sets: '3', reps: '45-60s', notes: '' },
+        { id: 'm2-6', primary: 'Battle Ropes', alternative: '', sets: '3', reps: '30s', notes: 'Finisher' },
+        { id: 'm2-7', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'men-4d-3': [
+        { id: 'm3-1', primary: 'Standing Military Press', alternative: 'Seated Barbell Overhead Press / Dumbbell Shoulder Press', sets: '3', reps: '8-10', notes: '' },
+        { id: 'm3-2', primary: 'Dumbbell Lateral Raise', alternative: 'Cable Lateral Raise', sets: '3', reps: '12-15', notes: '' },
+        { id: 'm3-3', primary: 'Reverse Pec Deck', alternative: 'Cable Face Pull', sets: '3', reps: '12-15', notes: '' },
+        { id: 'm3-4', primary: 'Dumbbell Shrug', alternative: 'Barbell Shrug', sets: '3', reps: '10-12', notes: '' },
+        { id: 'm3-5', primary: 'Sit-Ups', alternative: 'Hanging Leg Raise', sets: '3', reps: '12-15', notes: '' },
+        { id: 'm3-6', primary: 'Tire Hammers', alternative: '', sets: '3', reps: '10-12', notes: 'Finisher' },
+        { id: 'm3-7', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'men-4d-4': [
+        { id: 'm4-1', primary: 'Barbell Back Squat', alternative: 'Leg Press', sets: '3', reps: '8-10', notes: '' },
+        { id: 'm4-2', primary: 'Leg Extensions', alternative: '', sets: '3', reps: '10-12', notes: '' },
+        { id: 'm4-3', primary: 'Leg Curls', alternative: '', sets: '3', reps: '10-12', notes: '' },
+        { id: 'm4-4', primary: 'Deadlift', alternative: 'Hyperextensions / Hip Thrust', sets: '3', reps: '8-10', notes: '' },
+        { id: 'm4-5', primary: 'Single-Leg Calf Raises', alternative: 'Standing Calf Raises', sets: '3', reps: '12-15', notes: '' },
+        { id: 'm4-6', primary: 'Boxing', alternative: '', sets: '3', reps: '2 min', notes: 'Finisher' },
+        { id: 'm4-7', primary: 'Elliptical', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+
+      // Women 4-Day Split: Slam Balls, Battle Ropes, Tire Hammers, Boxing + 3 days Treadmill, 1 day Elliptical
+      'wom-4d-1': [
+        { id: 'w1-1', primary: 'Flat Dumbbell Bench Press', alternative: 'Incline Dumbbell Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'w1-2', primary: 'Incline Dumbbell Press', alternative: 'Incline Barbell Press', sets: '3', reps: '10-12', notes: '' },
+        { id: 'w1-3', primary: 'Standing Military Press', alternative: 'Dumbbell Shoulder Press / Machine Shoulder Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'w1-4', primary: 'Dumbbell Lateral Raise', alternative: 'Cable Lateral Raise', sets: '3', reps: '12-15', notes: '' },
+        { id: 'w1-5', primary: 'Tricep Rope Pushdown', alternative: 'Overhead Dumbbell Extension', sets: '3', reps: '10-12', notes: '' },
+        { id: 'w1-6', primary: 'Slam Balls', alternative: '', sets: '3', reps: '12-15', notes: 'Finisher' },
+        { id: 'w1-7', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'wom-4d-2': [
+        { id: 'w2-1', primary: 'Barbell Back Squat', alternative: 'Goblet Squat', sets: '3', reps: '8-10', notes: '' },
+        { id: 'w2-2', primary: 'Leg Press', alternative: 'Dumbbell Lunges', sets: '3', reps: '10-12', notes: '' },
+        { id: 'w2-3', primary: 'Leg Extensions', alternative: '', sets: '3', reps: '12-15', notes: '' },
+        { id: 'w2-4', primary: 'Standing Calf Raises', alternative: '', sets: '3', reps: '12-15', notes: '' },
+        { id: 'w2-5', primary: 'Plank', alternative: '', sets: '3', reps: '45-60s', notes: '' },
+        { id: 'w2-6', primary: 'Battle Ropes', alternative: '', sets: '3', reps: '30s', notes: 'Finisher' },
+        { id: 'w2-7', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'wom-4d-3': [
+        { id: 'w3-1', primary: 'Lat Pulldown', alternative: 'Assisted Pull-Up / Neutral Grip Pull-Up', sets: '3', reps: '8-12', notes: '' },
+        { id: 'w3-2', primary: 'Seated Cable Row', alternative: 'One-Arm Dumbbell Row', sets: '3', reps: '10-12', notes: '' },
+        { id: 'w3-3', primary: 'Barbell Row', alternative: 'One-Arm Dumbbell Row', sets: '3', reps: '10-12', notes: '' },
+        { id: 'w3-4', primary: 'Face Pull', alternative: 'Bent-Over Dumbbell Rear Delt Fly', sets: '3', reps: '12-15', notes: '' },
+        { id: 'w3-5', primary: 'Barbell Curl', alternative: 'Cable Curl', sets: '3', reps: '10-12', notes: '' },
+        { id: 'w3-6', primary: 'Tire Hammers', alternative: '', sets: '3', reps: '10-12', notes: 'Finisher' },
+        { id: 'w3-7', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'wom-4d-4': [
+        { id: 'w4-1', primary: 'Hip Thrust Machine', alternative: '', sets: '3', reps: '8-12', notes: '' },
+        { id: 'w4-2', primary: 'Deadlift', alternative: 'Stiff-Leg Deadlift / Hyperextensions', sets: '3', reps: '8-12', notes: '' },
+        { id: 'w4-3', primary: 'Leg Curls', alternative: '', sets: '3', reps: '10-12', notes: '' },
+        { id: 'w4-4', primary: 'Hip Abductor', alternative: 'Adduction Machine', sets: '3', reps: '12-15', notes: '' },
+        { id: 'w4-5', primary: 'Sit-Ups', alternative: '', sets: '3', reps: '12-15', notes: '' },
+        { id: 'w4-6', primary: 'Boxing', alternative: '', sets: '3', reps: '2 min', notes: 'Finisher' },
+        { id: 'w4-7', primary: 'Elliptical', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+
+      // Knee Injury Split (4-Day): Day 1 Slam Balls + Treadmill | Day 2 Battle Ropes + Treadmill | Day 3 Tire Hammers + Treadmill | Day 4 Elliptical
+      'knee-4d-1': [
+        { id: 'k1-1', primary: 'Flat Dumbbell Bench Press', alternative: 'Incline Dumbbell Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'k1-2', primary: 'Incline Dumbbell Press', alternative: 'Pec Deck Fly', sets: '3', reps: '10-12', notes: '' },
+        { id: 'k1-3', primary: 'Standing Military Press', alternative: 'Dumbbell Shoulder Press / Machine Shoulder Press', sets: '3', reps: '8-12', notes: '' },
+        { id: 'k1-4', primary: 'Tricep Rope Pushdown', alternative: 'Overhead Dumbbell Extension', sets: '3', reps: '10-12', notes: '' },
+        { id: 'k1-5', primary: 'Slam Balls', alternative: '', sets: '3', reps: '12-15', notes: 'Finisher' },
+        { id: 'k1-6', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'knee-4d-2': [
+        { id: 'k2-1', primary: 'Hip Thrust Machine', alternative: 'Glute Bridge', sets: '3', reps: '8-12', notes: '' },
+        { id: 'k2-2', primary: 'Deadlift', alternative: 'Cable Pull-Through', sets: '3', reps: '8-12', notes: '' },
+        { id: 'k2-3', primary: 'Leg Curls', alternative: '', sets: '3', reps: '10-12', notes: '' },
+        { id: 'k2-4', primary: 'Standing Calf Raises', alternative: 'Single-Leg Calf Raises', sets: '3', reps: '12-15', notes: '' },
+        { id: 'k2-5', primary: 'Battle Ropes', alternative: '', sets: '3', reps: '30s', notes: 'Finisher' },
+        { id: 'k2-6', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'knee-4d-3': [
+        { id: 'k3-1', primary: 'Lat Pulldown', alternative: 'Neutral Grip Lat Pulldown', sets: '3', reps: '8-12', notes: '' },
+        { id: 'k3-2', primary: 'Seated Cable Row', alternative: 'One-Arm Dumbbell Row', sets: '3', reps: '10-12', notes: '' },
+        { id: 'k3-3', primary: 'Face Pull', alternative: 'Reverse Pec Deck', sets: '3', reps: '12-15', notes: '' },
+        { id: 'k3-4', primary: 'EZ-Bar Curl', alternative: 'Hammer Curl', sets: '3', reps: '10-12', notes: '' },
+        { id: 'k3-5', primary: 'Tire Hammers', alternative: '', sets: '3', reps: '10-12', notes: 'Finisher' },
+        { id: 'k3-6', primary: 'Treadmill', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+      'knee-4d-4': [
+        { id: 'k4-1', primary: '45-Degree Back Extension', alternative: 'Hyperextensions', sets: '3', reps: '10-12', notes: '' },
+        { id: 'k4-2', primary: 'Hip Adduction', alternative: 'Cable Glute Kickback', sets: '3', reps: '12-15', notes: '' },
+        { id: 'k4-3', primary: 'Sit-Ups', alternative: '', sets: '3', reps: '12-15', notes: '' },
+        { id: 'k4-4', primary: 'Lying Knee Raises', alternative: 'Plank', sets: '3', reps: '12-15', notes: '' },
+        { id: 'k4-5', primary: 'Elliptical', alternative: '', duration: '15-20 min', notes: 'Cardio' }
+      ],
+
+      // Extreme Fat Loss Protocol (3-Day): 6 items/day, heavy simple core focus + conditioning + Treadmill every day
+      'fl-3d-1': [
+        { id: 'fl1-1', primary: 'Incline Dumbbell Press', alternative: 'Flat Dumbbell Bench Press', sets: '3', reps: '12-15', notes: '' },
+        { id: 'fl1-2', primary: 'Lat Pulldown', alternative: 'Neutral Grip Lat Pulldown', sets: '3', reps: '12-15', notes: '' },
+        { id: 'fl1-3', primary: 'Sit-Ups', alternative: 'Crunches', sets: '3', reps: '15-20', notes: 'Core' },
+        { id: 'fl1-4', primary: 'Plank', alternative: '', sets: '3', reps: '45-60s', notes: 'Core' },
+        { id: 'fl1-5', primary: 'Slam Balls', alternative: 'Battle Ropes', sets: '3', reps: '12-15', notes: 'Fat burn' },
+        { id: 'fl1-6', primary: 'Treadmill', alternative: '', duration: '25-30 min', notes: 'Cardio' }
+      ],
+      'fl-3d-2': [
+        { id: 'fl2-1', primary: 'Leg Press', alternative: 'Goblet Squat', sets: '3', reps: '12-15', notes: '' },
+        { id: 'fl2-2', primary: 'Seated Leg Curl', alternative: 'Leg Extensions', sets: '3', reps: '12-15', notes: '' },
+        { id: 'fl2-3', primary: 'Lying Knee Raises', alternative: 'Leg Raises', sets: '3', reps: '15', notes: 'Core' },
+        { id: 'fl2-4', primary: 'Russian Twists', alternative: '', sets: '3', reps: '20', notes: 'Core' },
+        { id: 'fl2-5', primary: 'Tire Hammers', alternative: '', sets: '3', reps: '10-12', notes: 'Fat burn' },
+        { id: 'fl2-6', primary: 'Treadmill', alternative: '', duration: '25-30 min', notes: 'Cardio' }
+      ],
+      'fl-3d-3': [
+        { id: 'fl3-1', primary: 'Dumbbell Shoulder Press', alternative: 'Machine Shoulder Press', sets: '3', reps: '12-15', notes: '' },
+        { id: 'fl3-2', primary: 'Bicycle Crunches', alternative: 'Sit-Ups', sets: '3', reps: '15-20', notes: 'Core' },
+        { id: 'fl3-3', primary: 'Dumbbell Bicep Curl', alternative: 'Tricep Rope Pushdown', sets: '3', reps: '12-15', notes: 'Arms' },
+        { id: 'fl3-4', primary: 'Hanging Knee Raises', alternative: 'Lying Knee Raises', sets: '3', reps: '12-15', notes: 'Core' },
+        { id: 'fl3-5', primary: 'Battle Ropes', alternative: 'Slam Balls', sets: '3', reps: '30s', notes: 'Fat burn' },
+        { id: 'fl3-6', primary: 'Treadmill', alternative: '', duration: '25-30 min', notes: 'Cardio' }
+      ],
+
+      // Me: Personal 6-Day Split
+      'me-6d-1': [
+        { id: 'me1-1', primary: 'Weighted Pull-Ups', alternative: '', sets: '3', reps: '6–8', notes: '' },
+        { id: 'me1-2', primary: 'Barbell Bent-Over Rows', alternative: '', sets: '3', reps: '6–8', notes: '' },
+        { id: 'me1-3', primary: 'T-Bar Rows', alternative: '', sets: '3', reps: '8–10', notes: '' },
+        { id: 'me1-4', primary: 'Seated Cable Rows', alternative: '', sets: '3', reps: '10–12', notes: '' }
+      ],
+      'me-6d-2': [
+        { id: 'me2-1', primary: 'Flat Barbell Bench Press', alternative: '', sets: '3', reps: '4–6', notes: '' },
+        { id: 'me2-2', primary: 'Incline Barbell Bench Press', alternative: '', sets: '3', reps: '6–8', notes: '' },
+        { id: 'me2-3', primary: 'Cable Flies', alternative: '', sets: '3', reps: '12–15', notes: '' },
+        { id: 'me2-4', primary: 'Side Lateral Raises', alternative: '', sets: '3', reps: '12–15', notes: '' }
+      ],
+      'me-6d-3': [
+        { id: 'me3-1', primary: 'Barbell Military Press', alternative: '', sets: '3', reps: '5–7', notes: '' },
+        { id: 'me3-2', primary: 'Side Lateral Raises', alternative: '', sets: '3', reps: '12–15', notes: '' },
+        { id: 'me3-3', primary: 'Rear Delt Flies', alternative: '', sets: '3', reps: '12–15', notes: '' },
+        { id: 'me3-4', primary: 'Barbell Shrugs', alternative: '', sets: '3', reps: '10–12', notes: '' }
+      ],
+      'me-6d-4': [
+        { id: 'me4-1', primary: 'Weighted Dips', alternative: '', sets: '4', reps: '6–8', notes: '' },
+        { id: 'me4-2', primary: 'Barbell Skull Crushers', alternative: '', sets: '4', reps: '8–12', notes: '' },
+        { id: 'me4-3', primary: 'Barbell Curls', alternative: '', sets: '2', reps: '8–10', notes: '' },
+        { id: 'me4-4', primary: 'Incline Dumbbell Curls', alternative: '', sets: '2', reps: '10–12', notes: '' }
+      ],
+      'me-6d-5': [
+        { id: 'me5-1', primary: 'Barbell Squats', alternative: '', sets: '3', reps: '5–7', notes: '' },
+        { id: 'me5-2', primary: 'Leg Extensions', alternative: '', sets: '3', reps: '10–15', notes: '' },
+        { id: 'me5-3', primary: 'Leg Curls', alternative: '', sets: '3', reps: '10–15', notes: '' },
+        { id: 'me5-4', primary: 'Calf Raises', alternative: '', sets: '3', reps: '12–15', notes: '' }
+      ],
+      'me-6d-6': [
+        { id: 'me6-1', primary: 'Sit-Ups', alternative: '', sets: '3', reps: 'to failure', notes: '' },
+        { id: 'me6-2', primary: 'Hanging Knee Raises', alternative: "Captain's Chair Knee Raises", sets: '3', reps: 'to failure', notes: '' },
+        { id: 'me6-3', primary: 'Boxing', alternative: '', sets: '3', reps: 'to failure', notes: '' },
+        { id: 'me6-4', primary: 'Tyre Throws', alternative: '', sets: '3', reps: 'to failure', notes: '' }
+      ]
+    };
+
+    let state = {
+      activeView: 'all',  // 'all' or split.id for instant 1-tap floor switching
+      pinnedSplits: [],   // [splitId] pinned for active floor sessions
+      activeDays: {},     // { [splitId]: dayId }
+      exercises: DEFAULT_EXERCISES
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            state.activeDays = parsed.activeDays || {};
+            state.pinnedSplits = Array.isArray(parsed.pinnedSplits) ? parsed.pinnedSplits : [];
+            if (parsed.activeView) state.activeView = parsed.activeView;
+          }
+        }
+      } catch (e) {
+        // Ignore storage errors
+      }
+      PROGRAM_STRUCTURE.forEach(cat => {
+        cat.splits.forEach(split => {
+          if (!state.activeDays[split.id] && split.days.length > 0) {
+            state.activeDays[split.id] = split.days[0].id;
+          }
+        });
+      });
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          activeDays: state.activeDays,
+          pinnedSplits: state.pinnedSplits,
+          activeView: state.activeView
+        }));
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    function getTotalExerciseCount() {
+      return Object.values(state.exercises).reduce((sum, list) => sum + (Array.isArray(list) ? list.length : 0), 0);
+    }
+
+    function getSplitExerciseCount(split) {
+      return split.days.reduce((sum, day) => sum + (state.exercises[day.id]?.length || 0), 0);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toastText');
+      toastText.textContent = msg;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 2200);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getAllSplitsFlat() {
+      const shortLabels = {
+        'beg-full-body': 'Full Body · 3-Day',
+        'beg-ppl': 'PPL · 3-Day',
+        'men-4day': 'Men · 4-Day',
+        'women-4day': 'Women · 4-Day',
+        'knee-4day': 'Knee · 4-Day',
+        'fat-loss-3day': 'Fat Loss · 3-Day',
+        'me-6day': 'Me · 6-Day'
+      };
+      const all = [];
+      PROGRAM_STRUCTURE.forEach(cat => {
+        cat.splits.forEach(split => {
+          all.push({
+            id: split.id,
+            shortName: shortLabels[split.id] || split.name,
+            pinned: state.pinnedSplits.includes(split.id)
+          });
+        });
+      });
+      return all.sort((a, b) => Number(b.pinned) - Number(a.pinned));
+    }
+
+    function renderNav() {
+      const nav = document.getElementById('categoryNav');
+      const flatSplits = getAllSplitsFlat();
+      const allActive = state.activeView === 'all';
+
+      const allBtn = `
+        <button
+          type="button"
+          data-view-tab="all"
+          class="shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all min-h-[40px] ${
+            allActive
+              ? 'bg-ink text-white shadow-soft'
+              : 'bg-surface text-muted hover:text-ink hover:bg-slate-200/70 border border-line'
+          }"
+        >
+          All Splits
+        </button>
+      `;
+
+      const splitBtns = flatSplits.map(item => {
+        const active = state.activeView === item.id;
+        return `
+          <button
+            type="button"
+            data-view-tab="${item.id}"
+            class="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all min-h-[40px] ${
+              active
+                ? 'bg-neutral-950 text-white shadow-soft'
+                : item.pinned
+                  ? 'bg-white text-neutral-950 border-2 border-neutral-950 hover:bg-neutral-100'
+                  : 'bg-white text-neutral-800 hover:bg-neutral-100 border border-neutral-200'
+            }"
+          >
+            ${item.pinned ? `<span class="w-1.5 h-1.5 rounded-full ${active ? 'bg-white' : 'bg-neutral-950'}"></span>` : ''}
+            <span>${escapeHtml(item.shortName)}</span>
+          </button>
+        `;
+      }).join('');
+
+      nav.innerHTML = allBtn + splitBtns;
+    }
+
+
+
+    function renderCategories() {
+
+      const container = document.getElementById('categoriesContainer');
+      const visibleCategories = state.activeView === 'all'
+        ? PROGRAM_STRUCTURE
+        : PROGRAM_STRUCTURE
+            .map(c => ({ ...c, splits: c.splits.filter(s => s.id === state.activeView) }))
+            .filter(c => c.splits.length > 0);
+
+      container.innerHTML = visibleCategories.map(cat => {
+        const splitsHtml = cat.splits.map(split => {
+          const activeDayId = state.activeDays[split.id] || split.days[0].id;
+          const activeDay = split.days.find(d => d.id === activeDayId) || split.days[0];
+          const dayExercises = state.exercises[activeDay.id] || [];
+          const splitTotal = getSplitExerciseCount(split);
+
+          const dayTabsHtml = split.days.map(day => {
+            const isSelected = day.id === activeDay.id;
+            const count = (state.exercises[day.id] || []).length;
+            return `
+              <button
+                type="button"
+                data-split-id="${split.id}"
+                data-day-id="${day.id}"
+                class="flex-1 min-w-[116px] sm:min-w-0 text-left px-3.5 py-2.5 rounded-xl border transition-all ${
+                  isSelected
+                    ? 'bg-neutral-950 text-white border-neutral-950 shadow-[0_8px_20px_-6px_rgba(0,0,0,0.32)]'
+                    : 'bg-neutral-50 border-neutral-200 hover:bg-white hover:border-neutral-400 text-ink'
+                }"
+              >
+                <div class="flex items-center justify-between gap-1.5">
+                  <span class="font-mono text-[10px] font-bold uppercase tracking-[0.12em] ${isSelected ? 'text-neutral-300' : 'text-neutral-500'}">
+                    ${escapeHtml(day.title)}
+                  </span>
+                  <span class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                    isSelected ? 'bg-white text-neutral-950' : 'bg-neutral-200 text-neutral-800'
+                  }">${count}</span>
+                </div>
+                <div class="font-display text-xs sm:text-sm font-bold truncate mt-0.5 ${isSelected ? 'text-white' : 'text-neutral-950'}">
+                  ${escapeHtml(day.focus)}
+                </div>
+              </button>
+            `;
+          }).join('');
+
+          const exercisesListHtml = `
+              <div class="space-y-2.5">
+                ${dayExercises.map((ex, idx) => `
+                  <div class="flex items-start gap-3.5 p-3.5 sm:p-4 rounded-xl border border-neutral-200/90 bg-white hover:border-neutral-900 hover:-translate-y-[1px] transition-all duration-150 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)]">
+                    <span class="w-7 h-7 rounded-lg bg-neutral-950 text-white font-mono text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                      0${idx + 1}
+                    </span>
+                    <div class="min-w-0">
+                      <div class="text-sm sm:text-[15px] font-bold text-neutral-950 tracking-[-0.01em] break-words leading-snug">
+                        <span>${escapeHtml(ex.primary)}</span>${ex.alternative ? `<span class="text-neutral-400 font-mono font-semibold mx-1.5">/</span><span>${escapeHtml(ex.alternative)}</span>` : ''}
+                      </div>
+                      ${(ex.duration || ex.sets || ex.reps || ex.notes) ? `
+                        <div class="flex flex-wrap items-center gap-2 mt-1.5">
+                          ${ex.duration ? `
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-neutral-950 text-white font-mono text-[11px] font-semibold">
+                              ${escapeHtml(ex.duration)}
+                            </span>
+                          ` : (ex.sets || ex.reps) ? `
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-neutral-100 border border-neutral-200 text-neutral-800 font-mono text-[11px] font-semibold">
+                              ${ex.reps === 'to failure' ? `${escapeHtml(ex.sets || '—')} sets to failure` : `${escapeHtml(ex.sets || '—')} sets × ${escapeHtml(ex.reps || '—')}${(String(ex.reps || '').endsWith('s') || String(ex.reps || '').includes('min')) ? '' : ' reps'}`}
+                            </span>
+                          ` : ''}
+                          ${ex.notes ? `
+                            <span class="text-xs text-muted">${escapeHtml(ex.notes)}</span>
+                          ` : ''}
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+
+          return `
+            <article class="bg-white/90 backdrop-blur-md border border-neutral-200/90 rounded-2xl shadow-[0_14px_38px_-14px_rgba(0,0,0,0.10),0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden">
+              <!-- Split Header -->
+              <div class="px-4 sm:px-6 py-4 border-b border-line flex flex-wrap items-center justify-between gap-2 bg-white">
+                <div>
+                  <h4 class="font-display font-bold text-base sm:text-lg text-ink">${escapeHtml(split.name)}</h4>
+                  <p class="text-xs text-muted mt-0.5">${escapeHtml(split.daysLabel)} · ${splitTotal} ${splitTotal === 1 ? 'exercise' : 'exercises'}</p>
+                </div>
+                <button
+                  type="button"
+                  data-pin-split="${split.id}"
+                  class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-colors min-h-[38px] ${
+                    state.pinnedSplits.includes(split.id)
+                      ? 'bg-neutral-950 border-neutral-950 text-white hover:bg-neutral-800'
+                      : 'bg-white border-neutral-200 text-neutral-700 hover:text-neutral-950 hover:border-neutral-400'
+                  }"
+                  title="Pin to front of top bar for active floor coaching"
+                >
+                  <i data-lucide="pin" class="w-3.5 h-3.5"></i>
+                  <span>${state.pinnedSplits.includes(split.id) ? 'Pinned' : 'Pin'}</span>
+                </button>
+              </div>
+
+              <!-- Day Selector Strip -->
+              <div class="px-4 sm:px-6 pt-4 pb-2 flex items-stretch gap-2 overflow-x-auto no-scrollbar">
+                ${dayTabsHtml}
+              </div>
+
+              <!-- Active Day Body -->
+              <div class="p-4 sm:p-6 pt-3">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono text-xs font-bold uppercase tracking-wider text-neutral-950">${escapeHtml(activeDay.title)}</span>
+                    <span class="text-slate-300">·</span>
+                    <span class="text-sm font-semibold text-ink">${escapeHtml(activeDay.focus)}</span>
+                  </div>
+                  <span class="text-xs font-medium text-muted">${dayExercises.length} ${dayExercises.length === 1 ? 'exercise' : 'exercises'}</span>
+                </div>
+                ${exercisesListHtml}
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        return `
+          <section class="space-y-3.5" aria-labelledby="cat-${cat.id}">
+            <div class="flex items-end justify-between gap-3 px-1">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 id="cat-${cat.id}" class="font-display font-extrabold text-lg sm:text-xl text-ink tracking-tight">
+                    ${escapeHtml(cat.name)}
+                  </h3>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-5">
+              ${splitsHtml}
+            </div>
+          </section>
+        `;
+      }).join('');
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    function renderAll() {
+      renderNav();
+      renderCategories();
+    }
+
+    document.addEventListener('click', (e) => {
+      const viewBtn = e.target.closest('[data-view-tab]');
+      if (viewBtn) {
+        state.activeView = viewBtn.dataset.viewTab;
+        saveState();
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const pinBtn = e.target.closest('[data-pin-split]');
+      if (pinBtn) {
+        const sid = pinBtn.dataset.pinSplit;
+        if (state.pinnedSplits.includes(sid)) {
+          state.pinnedSplits = state.pinnedSplits.filter(x => x !== sid);
+          showToast('Unpinned from front');
+        } else {
+          state.pinnedSplits.push(sid);
+          showToast('Pinned to front');
+        }
+        saveState();
+        renderAll();
+        return;
+      }
+
+      const dayBtn = e.target.closest('[data-day-id]');
+      if (dayBtn) {
+        const splitId = dayBtn.dataset.splitId;
+        const dayId = dayBtn.dataset.dayId;
+        state.activeDays[splitId] = dayId;
+        saveState();
+        renderAll();
+      }
+    });
+
+    // Init
+    loadState();
+    renderAll();
+  </script>
+</body>
+</html>
